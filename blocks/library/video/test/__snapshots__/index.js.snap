@@ -45,7 +45,6 @@ exports[`core/video block edit matches snapshot 1`] = `
         Use URL
       </button>
     </form>
-    *** Mock(Media upload button) ***
   </div>
 </div>
 `;
