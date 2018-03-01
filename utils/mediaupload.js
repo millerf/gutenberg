@@ -1,7 +1,7 @@
 /**
  * External Dependencies
  */
-import { compact } from 'lodash';
+import { get, compact } from 'lodash';
 
 /**
  *	Media Upload is used by image and gallery blocks to handle uploading an image.
@@ -34,7 +34,13 @@ export function mediaUpload( filesList, onImagesChange ) {
 
 		return createMediaFromFile( mediaFile ).then(
 			( savedMedia ) => {
-				setAndUpdateImages( idx, { id: savedMedia.id, url: savedMedia.source_url, link: savedMedia.link } );
+				const caption = get( savedMedia, [ 'caption', 'raw' ] );
+				setAndUpdateImages( idx, {
+					id: savedMedia.id,
+					url: savedMedia.source_url,
+					link: savedMedia.link,
+					caption: caption ? [ caption ] : [],
+				} );
 			},
 			() => {
 				// Reset to empty on failure.
