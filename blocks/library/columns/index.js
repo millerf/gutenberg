@@ -28,7 +28,7 @@ import InnerBlocks from '../../inner-blocks';
  * @return {Object[]} Columns layout configuration.
  */
 const getColumnLayouts = memoize( ( columns ) => {
-	return times( columns, ( n ) => ( {
+	return times( 1, ( n ) => ( {
 		name: `column-${ n + 1 }`,
 		label: sprintf( __( 'Column %d' ), n + 1 ),
 		icon: 'columns',

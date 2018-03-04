@@ -23,6 +23,7 @@ import ImagePlaceholder from '../../image-placeholder';
 import BlockControls from '../../block-controls';
 import BlockAlignmentToolbar from '../../block-alignment-toolbar';
 import InspectorControls from '../../inspector-controls';
+import InnerBlocks from '../../inner-blocks';
 
 const validAlignments = [ 'left', 'center', 'right', 'wide', 'full' ];
 
@@ -196,16 +197,14 @@ export const settings = {
 				style={ style }
 				className={ classes }
 			>
-				{ title || isSelected ? (
-					<RichText
-						tagName="h2"
-						placeholder={ __( 'Write title…' ) }
-						value={ title }
-						onChange={ ( value ) => setAttributes( { title: value } ) }
-						isSelected={ isSelected }
-						inlineToolbar
-					/>
-				) : null }
+				<InnerBlocks layouts={
+					{
+						icon: 'columns',
+						label: 'Column 1',
+						name: 'column-1',
+					} }
+				supportedBlocks={ [ 'core/button' ] }
+				/>
 			</section>,
 		];
 	},
@@ -228,7 +227,7 @@ export const settings = {
 
 		return (
 			<section className={ classes } style={ style }>
-				<h2>{ title }</h2>
+				<InnerBlocks.Content />
 			</section>
 		);
 	},
