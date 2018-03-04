@@ -536,3 +536,12 @@ export function insertDefaultBlock( attributes, rootUID, index ) {
 		index,
 	};
 }
+
+export function updateNestedBlockSettings( blockUID, setting, value ) {
+	return {
+		type: 'UPDATED_NEST_BLOCK_SETTINGS',
+		blockUID,
+		setting,
+		value,
+	};
+}

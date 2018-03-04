@@ -5,6 +5,7 @@ import optimist from 'redux-optimist';
 import { combineReducers } from 'redux';
 import {
 	flow,
+	get,
 	reduce,
 	first,
 	last,
@@ -839,6 +840,24 @@ export const reusableBlocks = combineReducers( {
 		return state;
 	},
 } );
+
+export const nestedSettings = ( state = {}, action ) => {
+	if ( 'UPDATED_NEST_BLOCK_SETTINGS' === action.type ) {
+		const blockUID = action.blockUID;
+		const blockSettings = get( state, [ blockUID ], {} );
+		const updateIsRequired = blockSettings[ action.setting ] !== action.value;
+		if ( updateIsRequired ) {
+			return {
+				...state,
+				[ blockUID ]: {
+					...blockSettings,
+					[ action.setting ]: action.value,
+				},
+			};
+		}
+	}
+	return state;
+};
 
 export default optimist( combineReducers( {
 	editor,
