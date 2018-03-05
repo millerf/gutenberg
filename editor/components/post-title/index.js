@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
 import { Component, compose } from '@wordpress/element';
 import { keycodes } from '@wordpress/utils';
 import { createBlock, getDefaultBlockName } from '@wordpress/blocks';
-import { Button, Dashicon, withContext } from '@wordpress/components';
+import { Button, Dashicon, withContext, Popover } from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -34,17 +34,20 @@ class PostTitle extends Component {
 
 		this.bindContainer = this.bindNode.bind( this, 'container' );
 		this.bindTextarea = this.bindNode.bind( this, 'textarea' );
+		this.bindPostPermalink = this.bindNode.bind( this, 'permalink' );
 		this.onChange = this.onChange.bind( this );
 		this.onSelect = this.onSelect.bind( this );
 		this.onUnselect = this.onUnselect.bind( this );
 		this.onSelectionChange = this.onSelectionChange.bind( this );
 		this.onKeyDown = this.onKeyDown.bind( this );
 		this.blurIfOutside = this.blurIfOutside.bind( this );
+		this.togglePermalink = this.togglePermalink.bind( this );
 
 		this.nodes = {};
 
 		this.state = {
 			isSelected: false,
+			permalinkOpen: false,
 		};
 	}
 
@@ -76,7 +79,7 @@ class PostTitle extends Component {
 	}
 
 	onSelect() {
-		this.setState( { isSelected: true } );
+		this.setState( { isSelected: ! this.state.permalinkOpen } );
 		this.props.clearSelectedBlock();
 	}
 
@@ -97,9 +100,21 @@ class PostTitle extends Component {
 		}
 	}
 
+	togglePermalink() {
+		const toggledPermalinkOpen = ! this.state.permalinkOpen;
+		this.setState(
+			{ permalinkOpen: toggledPermalinkOpen },
+			function afterPermalinkOpenChange() {
+				if ( toggledPermalinkOpen ) {
+					this.nodes.permalink.getWrappedInstance().setFocus();
+				}
+			}
+		);
+	}
+
 	render() {
 		const { title, placeholder } = this.props;
-		const { isSelected } = this.state;
+		const { isSelected, permalinkOpen } = this.state;
 		const className = classnames( 'editor-post-title', { 'is-selected': isSelected } );
 
 		return (
@@ -110,15 +125,22 @@ class PostTitle extends Component {
 				className={ className }
 				tabIndex={ -1 /* Necessary for Firefox to include relatedTarget in blur event */ }
 			>
-				{ ! isSelected &&
-					<Button
-						className="editor-post-title__permalink-button"
-						onClick={ this.onSelect }
-					>
-						<Dashicon icon="admin-links" />
-					</Button>
-				}
-				{ isSelected && <PostPermalink /> }
+				<Button
+					className="editor-post-title__permalink-button"
+					onClick={ this.togglePermalink }>
+					<Dashicon icon="admin-links" />
+					{ permalinkOpen && (
+						<Popover
+							className="editor-post-title__permalink-popover"
+							position="top right"
+							focusOnMount={ false }
+							onClose={ this.togglePermalink }
+							onClick={ ( event ) => event.stopPropagation() }
+						>
+							<PostPermalink ref={ this.bindPostPermalink } />
+						</Popover>
+					) }
+				</Button>
 				<div>
 					<Textarea
 						ref={ this.bindTextarea }
