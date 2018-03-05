@@ -7,7 +7,7 @@ import { includes } from 'lodash';
  * Browser dependencies
  */
 const { getComputedStyle } = window;
-const { TEXT_NODE } = window.Node;
+const { TEXT_NODE, ELEMENT_NODE } = window.Node;
 
 /**
  * Check whether the caret is horizontally at the edge of the container.
@@ -107,11 +107,7 @@ export function isVerticalEdge( container, isReverse, collapseRanges = false ) {
 		return false;
 	}
 
-	// Adjust for empty containers.
-	const rangeRect =
-		range.startContainer.nodeType === window.Node.ELEMENT_NODE ?
-			range.startContainer.getBoundingClientRect() :
-			range.getClientRects()[ 0 ];
+	const rangeRect = getClientRect( range );
 
 	if ( ! rangeRect ) {
 		return false;
@@ -133,11 +129,29 @@ export function isVerticalEdge( container, isReverse, collapseRanges = false ) {
 	return true;
 }
 
+/**
+ * Get the rectangle of a given Range.
+ *
+ * @param {Range} range The range.
+ *
+ * @return {DOMRect} The rectangle.
+ */
+export function getClientRect( range ) {
+	// Adjust for empty containers.
+	return range.startContainer.nodeType === ELEMENT_NODE ?
+		range.startContainer.getBoundingClientRect() :
+		range.getClientRects()[ 0 ];
+}
+
+/**
+ * Get the rectangle for the selection in a container.
+ *
+ * @param {Element} container Editable container.
+ *
+ * @return {?DOMRect} The rectangle.
+ */
 export function computeCaretRect( container ) {
-	if (
-		includes( [ 'INPUT', 'TEXTAREA' ], container.tagName ) ||
-		! container.isContentEditable
-	) {
+	if ( ! container.isContentEditable ) {
 		return;
 	}
 
@@ -148,10 +162,7 @@ export function computeCaretRect( container ) {
 		return;
 	}
 
-	// Adjust for empty containers.
-	return range.startContainer.nodeType === window.Node.ELEMENT_NODE ?
-		range.startContainer.getBoundingClientRect() :
-		range.getClientRects()[ 0 ];
+	return getClientRect( range );
 }
 
 /**
