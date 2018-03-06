@@ -248,7 +248,8 @@ export default {
 					},
 				},
 				...blocksWithTheSameType.slice( 1 ),
-			]
+			],
+			action.time
 		) );
 	},
 	AUTOSAVE( action, store ) {
@@ -457,7 +458,7 @@ export default {
 		} );
 		dispatch( updateReusableBlock( reusableBlock.id, reusableBlock ) );
 		dispatch( saveReusableBlock( reusableBlock.id ) );
-		dispatch( replaceBlocks( [ oldBlock.uid ], [ newBlock ] ) );
+		dispatch( replaceBlocks( [ oldBlock.uid ], [ newBlock ], action.time ) );
 	},
 	INSERT_DEFAULT_BLOCK( action ) {
 		const { attributes, rootUID, index } = action;

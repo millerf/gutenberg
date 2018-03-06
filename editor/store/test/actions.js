@@ -159,10 +159,11 @@ describe( 'actions', () => {
 				uid: 'ribs',
 			};
 
-			expect( replaceBlock( [ 'chicken' ], block ) ).toEqual( {
+			expect( replaceBlock( [ 'chicken' ], block, 123456 ) ).toEqual( {
 				type: 'REPLACE_BLOCKS',
 				uids: [ 'chicken' ],
 				blocks: [ block ],
+				time: 123456,
 			} );
 		} );
 	} );
@@ -173,10 +174,11 @@ describe( 'actions', () => {
 				uid: 'ribs',
 			} ];
 
-			expect( replaceBlocks( [ 'chicken' ], blocks ) ).toEqual( {
+			expect( replaceBlocks( [ 'chicken' ], blocks, 123456 ) ).toEqual( {
 				type: 'REPLACE_BLOCKS',
 				uids: [ 'chicken' ],
 				blocks,
+				time: 123456,
 			} );
 		} );
 	} );
@@ -187,10 +189,12 @@ describe( 'actions', () => {
 				uid: 'ribs',
 			};
 			const index = 5;
-			expect( insertBlock( block, index ) ).toEqual( {
+			expect( insertBlock( block, index, 'test_uid', 123456 ) ).toEqual( {
 				type: 'INSERT_BLOCKS',
 				blocks: [ block ],
 				index,
+				rootUID: 'test_uid',
+				time: 123456,
 			} );
 		} );
 	} );
@@ -201,10 +205,12 @@ describe( 'actions', () => {
 				uid: 'ribs',
 			} ];
 			const index = 3;
-			expect( insertBlocks( blocks, index ) ).toEqual( {
+			expect( insertBlocks( blocks, index, 'test_uid', 123456 ) ).toEqual( {
 				type: 'INSERT_BLOCKS',
 				blocks,
 				index,
+				rootUID: 'test_uid',
+				time: 123456,
 			} );
 		} );
 	} );
@@ -259,9 +265,10 @@ describe( 'actions', () => {
 		it( 'should return MERGE_BLOCKS action', () => {
 			const blockAUid = 'blockA';
 			const blockBUid = 'blockB';
-			expect( mergeBlocks( blockAUid, blockBUid ) ).toEqual( {
+			expect( mergeBlocks( blockAUid, blockBUid, 123456 ) ).toEqual( {
 				type: 'MERGE_BLOCKS',
 				blocks: [ blockAUid, blockBUid ],
+				time: 123456,
 			} );
 		} );
 	} );
@@ -507,9 +514,10 @@ describe( 'actions', () => {
 
 	describe( 'convertBlockToReusable', () => {
 		const uid = '358b59ee-bab3-4d6f-8445-e8c6971a5605';
-		expect( convertBlockToReusable( uid ) ).toEqual( {
+		expect( convertBlockToReusable( uid, 123456 ) ).toEqual( {
 			type: 'CONVERT_BLOCK_TO_REUSABLE',
 			uid,
+			time: 123456,
 		} );
 	} );
 

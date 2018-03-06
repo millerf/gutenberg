@@ -159,14 +159,16 @@ export function toggleSelection( isSelectionEnabled = true ) {
  *
  * @param {(string|string[])} uids   Block UID(s) to replace.
  * @param {(Object|Object[])} blocks Replacement block(s).
+ * @param {?number}           time   Optional timestamp indicating when the replace occurred.
  *
  * @return {Object} Action object.
  */
-export function replaceBlocks( uids, blocks ) {
+export function replaceBlocks( uids, blocks, time = Date.now() ) {
 	return {
 		type: 'REPLACE_BLOCKS',
 		uids: castArray( uids ),
 		blocks: castArray( blocks ),
+		time,
 	};
 }
 
@@ -176,11 +178,12 @@ export function replaceBlocks( uids, blocks ) {
  *
  * @param {(string|string[])} uid   Block UID(s) to replace.
  * @param {(Object|Object[])} block Replacement block(s).
+ * @param {?number}           time  Optional timestamp indicating when the replace occurred.
  *
  * @return {Object} Action object.
  */
-export function replaceBlock( uid, block ) {
-	return replaceBlocks( uid, block );
+export function replaceBlock( uid, block, time = Date.now() ) {
+	return replaceBlocks( uid, block, time );
 }
 
 /**
@@ -190,11 +193,12 @@ export function replaceBlock( uid, block ) {
  * @param {Object}  block   Block object to insert.
  * @param {?number} index   Index at which block should be inserted.
  * @param {?string} rootUID Optional root UID of block list to insert.
+ * @param {?number}  time   Optional timestamp indicating when the insert occurred.
  *
  * @return {Object} Action object.
  */
-export function insertBlock( block, index, rootUID ) {
-	return insertBlocks( [ block ], index, rootUID );
+export function insertBlock( block, index, rootUID, time = Date.now() ) {
+	return insertBlocks( [ block ], index, rootUID, time );
 }
 
 /**
@@ -204,15 +208,17 @@ export function insertBlock( block, index, rootUID ) {
  * @param {Object[]} blocks  Block objects to insert.
  * @param {?number}  index   Index at which block should be inserted.
  * @param {?string}  rootUID Optional root UID of block list to insert.
+ * @param {?number}  time    Optional timestamp indicating when the insert occurred.
  *
  * @return {Object} Action object.
  */
-export function insertBlocks( blocks, index, rootUID ) {
+export function insertBlocks( blocks, index, rootUID, time = Date.now() ) {
 	return {
 		type: 'INSERT_BLOCKS',
 		blocks: castArray( blocks ),
 		index,
 		rootUID,
+		time,
 	};
 }
 
@@ -263,15 +269,17 @@ export function trashPost( postId, postType ) {
 /**
  * Returns an action object used in signalling that two blocks should be merged
  *
- * @param {string} blockAUid UID of the first block to merge.
- * @param {string} blockBUid UID of the second block to merge.
+ * @param {string}  blockAUid UID of the first block to merge.
+ * @param {string}  blockBUid UID of the second block to merge.
+ * @param {?number} time      Optional timestamp indicating when the merge occurred.
  *
  * @return {Object} Action object.
  */
-export function mergeBlocks( blockAUid, blockBUid ) {
+export function mergeBlocks( blockAUid, blockBUid, time = Date.now() ) {
 	return {
 		type: 'MERGE_BLOCKS',
 		blocks: [ blockAUid, blockBUid ],
+		time,
 	};
 }
 
@@ -508,14 +516,16 @@ export function convertBlockToStatic( uid ) {
  * Returns an action object used to convert a static block into a reusable
  * block.
  *
- * @param {Object} uid The ID of the block to detach.
+ * @param {Object} uid   The ID of the block to detach.
+ * @param {?number} time Optional timestamp indicating when the convert occurred.
  *
  * @return {Object} Action object.
  */
-export function convertBlockToReusable( uid ) {
+export function convertBlockToReusable( uid, time = Date.now() ) {
 	return {
 		type: 'CONVERT_BLOCK_TO_REUSABLE',
 		uid,
+		time,
 	};
 }
 /**

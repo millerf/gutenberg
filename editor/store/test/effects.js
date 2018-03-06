@@ -102,15 +102,19 @@ describe( 'effects', () => {
 			};
 			const dispatch = jest.fn();
 			const getState = () => ( {} );
-			handler( mergeBlocks( blockA.uid, blockB.uid ), { dispatch, getState } );
+			handler( mergeBlocks( blockA.uid, blockB.uid, 123456 ), { dispatch, getState } );
 
 			expect( dispatch ).toHaveBeenCalledTimes( 2 );
 			expect( dispatch ).toHaveBeenCalledWith( selectBlock( 'chicken', -1 ) );
-			expect( dispatch ).toHaveBeenCalledWith( replaceBlocks( [ 'chicken', 'ribs' ], [ {
-				uid: 'chicken',
-				name: 'core/test-block',
-				attributes: { content: 'chicken ribs' },
-			} ] ) );
+			expect( dispatch ).toHaveBeenCalledWith( replaceBlocks(
+				[ 'chicken', 'ribs' ],
+				[ {
+					uid: 'chicken',
+					name: 'core/test-block',
+					attributes: { content: 'chicken ribs' },
+				} ],
+				123456
+			) );
 		} );
 
 		it( 'should not merge the blocks have different types without transformation', () => {
@@ -197,15 +201,19 @@ describe( 'effects', () => {
 			};
 			const dispatch = jest.fn();
 			const getState = () => ( {} );
-			handler( mergeBlocks( blockA.uid, blockB.uid ), { dispatch, getState } );
+			handler( mergeBlocks( blockA.uid, blockB.uid, 123456 ), { dispatch, getState } );
 
 			expect( dispatch ).toHaveBeenCalledTimes( 2 );
 			// expect( dispatch ).toHaveBeenCalledWith( focusBlock( 'chicken', { offset: -1 } ) );
-			expect( dispatch ).toHaveBeenCalledWith( replaceBlocks( [ 'chicken', 'ribs' ], [ {
-				uid: 'chicken',
-				name: 'core/test-block',
-				attributes: { content: 'chicken ribs' },
-			} ] ) );
+			expect( dispatch ).toHaveBeenCalledWith( replaceBlocks(
+				[ 'chicken', 'ribs' ],
+				[ {
+					uid: 'chicken',
+					name: 'core/test-block',
+					attributes: { content: 'chicken ribs' },
+				} ],
+				123456
+			) );
 		} );
 	} );
 
@@ -766,7 +774,7 @@ describe( 'effects', () => {
 				const dispatch = jest.fn();
 				const store = { getState: () => state, dispatch };
 
-				handler( convertBlockToReusable( staticBlock.uid ), store );
+				handler( convertBlockToReusable( staticBlock.uid, 123456 ), store );
 
 				expect( dispatch ).toHaveBeenCalledWith(
 					updateReusableBlock( expect.any( Number ), {
@@ -783,7 +791,8 @@ describe( 'effects', () => {
 				expect( dispatch ).toHaveBeenCalledWith(
 					replaceBlocks(
 						[ staticBlock.uid ],
-						[ createBlock( 'core/block', { ref: expect.any( Number ) } ) ]
+						[ createBlock( 'core/block', { ref: expect.any( Number ) } ) ],
+						123456
 					)
 				);
 			} );
